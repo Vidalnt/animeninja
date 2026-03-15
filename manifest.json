@@ -2,12 +2,12 @@
   "id": "animeninja",
   "name": "AnimeNinja",
   "version": "1.0.0",
-  "manifestURI": "https://raw.githubusercontent.com/Vidalnt/animeninja/master/manifest.json",
+  "manifestURI": "https://raw.githubusercontent.com/Vidalnt/animeninja/main/manifest.json",
   "language": "typescript",
   "type": "onlinestream-provider",
   "description": "Online streaming provider for spanish subbed anime.",
   "author": "vidalnt",
-  "icon": "https://raw.githubusercontent.com/Vidalnt/animeninja/master/icon.png",
+  "icon": "https://raw.githubusercontent.com/Vidalnt/animeninja/main/icon.png",
   "lang": "es",
-  "payloadURI": "https://raw.githubusercontent.com/Vidalnt/animeninja/refs/heads/master/index.ts"
+  "payloadURI": "https://raw.githubusercontent.com/Vidalnt/animeninja/refs/heads/main/index.ts"
 }
