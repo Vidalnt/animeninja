@@ -20,14 +20,18 @@ class Provider {
         },
         body: JSON.stringify({
           query: `query ($type: MediaType, $search: String, $sort:[MediaSort]=[POPULARITY_DESC,SCORE_DESC], $isAdult: Boolean) {
-                        Page(perPage: 30) {
-                            results: media(type: $type, search: $search, sort: $sort, isAdult: $isAdult) {
-                                id
-                                title { romaji english }
-                            }
-                        }
-                    }`,
-          variables: { search: opts.query, type: "ANIME", isAdult: false },
+            Page(perPage: 30) {
+              results: media(type: $type, search: $search, sort: $sort, isAdult: $isAdult) {
+                id
+                title { romaji english }
+              }
+            }
+          }`,
+          variables: {
+            search: opts.query,
+            type: "ANIME",
+            isAdult: opts.media?.isAdult ?? false,
+          },
         }),
       });
 
@@ -131,8 +135,8 @@ class Provider {
       );
 
       const pDataStr = await providersRes.text();
-
       let pDataJsonStr = pDataStr.split("1:")[1] || pDataStr.split("0:")[1];
+
       if (!pDataJsonStr) {
         const line = pDataStr
           .split("\n")
@@ -140,25 +144,23 @@ class Provider {
         if (line) pDataJsonStr = line.substring(2);
       }
 
-      if (!pDataJsonStr)
-        throw new Error("No se pudo parsear la respuesta de proveedores.");
+      if (!pDataJsonStr) throw new Error("No se pudo parsear providers");
       const pData = JSON.parse(pDataJsonStr);
 
       let internalAnimeId = null;
       for (const provider of pData) {
         if (provider.providerId === host && provider.episodes) {
           const epData = provider.episodes[epStr];
-          if (epData && epData.id) {
+          if (epData?.id) {
             internalAnimeId = epData.id;
             break;
           }
         }
       }
 
-      if (!internalAnimeId)
-        throw new Error(
-          `El servidor ${host} no tiene este episodio disponible.`,
-        );
+      if (!internalAnimeId) {
+        throw new Error(`Servidor ${host} no tiene este episodio`);
+      }
 
       const sourcesRes = await fetch(
         `${this.baseUrl}/anime/watch/${anilistId}&host=${host}&type=${type}`,
@@ -174,8 +176,8 @@ class Provider {
       );
 
       const dataStr = await sourcesRes.text();
-
       let dataJsonStr = dataStr.split("1:")[1] || dataStr.split("0:")[1];
+
       if (!dataJsonStr) {
         const line = dataStr
           .split("\n")
@@ -183,12 +185,11 @@ class Provider {
         if (line) dataJsonStr = line.substring(2);
       }
 
-      if (!dataJsonStr)
-        throw new Error("Error parseando las fuentes de video.");
+      if (!dataJsonStr) throw new Error("Error parseando fuentes");
       const data = JSON.parse(dataJsonStr);
 
-      if (!data || !data.sources || data.sources.length === 0) {
-        throw new Error("No hay fuentes disponibles en AniPlay.");
+      if (!data?.sources?.length) {
+        throw new Error("No hay fuentes disponibles");
       }
 
       const subtitles: VideoSubtitle[] = [];
@@ -198,9 +199,7 @@ class Provider {
             id: sub.lang,
             language: sub.lang,
             url: sub.url,
-            isDefault:
-              sub.lang.toLowerCase().includes("english") ||
-              sub.lang.toLowerCase().includes("spanish"),
+            isDefault: sub.lang.toLowerCase().includes("english"),
           });
         }
       }
