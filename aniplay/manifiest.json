@@ -1,0 +1,14 @@
+{
+  "id": "aniplay",
+  "name": "AniPlay",
+  "version": "1.0.0",
+  "description": "Proveedor de streaming para AniPlay (aniplaynow.live). Soporta múltiples servidores (Yuki, Maze, Pahe) y subtítulos integrados.",
+  "language": "typescript",
+  "author": "SEAnime Extension",
+  "type": "onlinestream-provider",
+  "main": "index.js",
+  "lang": "es",
+  "icon": "https://raw.githubusercontent.com/Vidalnt/animeninja/main/aniplay/icon.png",
+  "manifestURI": "https://raw.githubusercontent.com/Vidalnt/animeninja/main/aniplay/manifest.json",
+  "payloadURI": "https://raw.githubusercontent.com/Vidalnt/animeninja/refs/heads/main/aniplay/index.ts"
+}
